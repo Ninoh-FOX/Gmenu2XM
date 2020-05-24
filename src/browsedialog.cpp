@@ -66,7 +66,7 @@ bool BrowseDialog::exec()
 		0,
 		static_cast<Sint16>(topBarHeight + 2),
 		static_cast<Uint16>(gmenu2x->resX - 18),
-		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 35)
+		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 50)
 	};
 	touchRect = (SDL_Rect) {
 		2,

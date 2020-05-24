@@ -4,3 +4,4 @@ icon=skin:icons/alsamixer.png
 exec=/usr/bin/alsamixer
 consoleapp=true
 editable=false
+params=480 640

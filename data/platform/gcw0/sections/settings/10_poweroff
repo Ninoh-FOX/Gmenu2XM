@@ -4,3 +4,4 @@ launchmsg=Powering off
 icon=skin:icons/poweroff.png
 exec=/sbin/poweroff
 editable=false
+params=480 640
