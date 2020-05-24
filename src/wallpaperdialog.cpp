@@ -87,19 +87,19 @@ bool WallpaperDialog::exec()
 		writeTitle(s, gmenu2x->tr["Wallpaper selection"]);
 		writeSubTitle(s, gmenu2x->tr["Select a wallpaper from the list"]);
 
-		buttonbox.paint(s, 5, gmenu2x->resY - 1);
+		buttonbox.paint(s, 10, gmenu2x->resY - 2);
 
 		//Selection
 		iY = selected - firstElement;
 		iY = top + (iY * fontheight);
-		s.box(2, iY, 308, fontheight, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+		s.box(4, iY, 616, fontheight, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 
 		//Files & Directories
-		s.setClipRect(0, top, 311, height);
+		s.setClipRect(0, top, 622, height);
 		for (i = firstElement; i < wallpapers.size()
 					&& i < firstElement + nb_elements; i++) {
 			iY = i-firstElement;
-			gmenu2x->font->write(s, wallpapers[i], 5,
+			gmenu2x->font->write(s, wallpapers[i], 10,
 						top + (iY * fontheight),
 						Font::HAlignLeft, Font::VAlignTop);
 		}

@@ -99,7 +99,7 @@ Menu::Menu(GMenu2X *gmenu2x, Touchscreen &ts)
 	}
 #endif
 
-	btnContextMenu.setPosition(gmenu2x->resX - 38, gmenu2x->bottomBarIconY);
+	btnContextMenu.setPosition(gmenu2x->resX - 76, gmenu2x->bottomBarIconY);
 }
 
 Menu::~Menu() {
@@ -132,8 +132,8 @@ void Menu::skinUpdated() {
 	ConfIntHash &skinConfInt = gmenu2x->skinConfInt;
 
 	//recalculate some coordinates based on the new element sizes
-	linkColumns = (gmenu2x->resX - 10) / skinConfInt["linkWidth"];
-	linkRows = (gmenu2x->resY - 35 - skinConfInt["topBarHeight"]) / skinConfInt["linkHeight"];
+	linkColumns = (gmenu2x->resX - 20) / skinConfInt["linkWidth"];
+	linkRows = (gmenu2x->resY - 70 - skinConfInt["topBarHeight"]) / skinConfInt["linkHeight"];
 
 	//reload section icons
 	vector<string>::size_type i = 0;
@@ -154,7 +154,7 @@ void Menu::calcSectionRange(int &leftSection, int &rightSection) {
 	const int screenWidth = gmenu2x->resX;
 	const int numSections = sections.size();
 	rightSection = min(
-			max(1, (screenWidth - 20 - linkWidth) / (2 * linkWidth)),
+			max(1, (screenWidth - 40 - linkWidth) / (2 * linkWidth)),
 			numSections / 2);
 	leftSection = max(
 			-rightSection,
@@ -195,7 +195,7 @@ void Menu::paint(Surface &s) {
 
 	// Paint section headers.
 	s.box(width / 2  - linkWidth / 2, 0, linkWidth, topBarHeight, selectionBgColor);
-	const uint sectionLinkPadding = (topBarHeight - 32 - font.getLineSpacing()) / 3;
+	const uint sectionLinkPadding = (topBarHeight - 64 - font.getLineSpacing()) / 3;
 	const uint numSections = sections.size();
 	for (int i = leftSection; i <= rightSection; i++) {
 		uint j = (centerSection + numSections + i) % numSections;
@@ -211,12 +211,12 @@ void Menu::paint(Surface &s) {
 			int t = sectionDelta < 0 ? sectionDelta + linkWidth : sectionDelta;
 			x += (((t * t) / linkWidth) * t) / linkWidth;
 		}
-		icon->blit(s, x - 16, sectionLinkPadding, 32, 32);
+		icon->blit(s, x - 32, sectionLinkPadding, 64, 64);
 		font.write(s, sections[j], x, topBarHeight - sectionLinkPadding,
 				Font::HAlignCenter, Font::VAlignBottom);
 	}
 	sc.skinRes("imgs/section-l.png")->blit(s, 0, 0);
-	sc.skinRes("imgs/section-r.png")->blit(s, width - 10, 0);
+	sc.skinRes("imgs/section-r.png")->blit(s, width - 20, 0);
 
 	vector<Link*> &sectionLinks = links[iSection];
 	const uint numLinks = sectionLinks.size();
@@ -225,11 +225,11 @@ void Menu::paint(Surface &s) {
 
 	//Links
 	const uint linksPerPage = linkColumns * linkRows;
-	const int linkSpacingX = (width - 10 - linkColumns * linkWidth) / linkColumns;
+	const int linkSpacingX = (width - 20 - linkColumns * linkWidth) / linkColumns;
 	const int linkMarginX = (
 			width - linkWidth * linkColumns - linkSpacingX * (linkColumns - 1)
 			) / 2;
-	const int linkSpacingY = (height - 35 - topBarHeight - linkRows * linkHeight) / linkRows;
+	const int linkSpacingY = (height - 70 - topBarHeight - linkRows * linkHeight) / linkRows;
 	for (uint i = iFirstDispRow * linkColumns; i < iFirstDispRow * linkColumns + linksPerPage && i < numLinks; i++) {
 		const int ir = i - iFirstDispRow * linkColumns;
 		const int x = linkMarginX + (ir % linkColumns) * (linkWidth + linkSpacingX);
@@ -245,7 +245,7 @@ void Menu::paint(Surface &s) {
 
 	if (selLink()) {
 		font.write(s, selLink()->getDescription(),
-				width / 2, height - bottomBarHeight + 2,
+				width / 2, height - bottomBarHeight + 4,
 				Font::HAlignCenter, Font::VAlignBottom);
 	}
 

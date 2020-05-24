@@ -60,18 +60,18 @@ bool BrowseDialog::exec()
 
 	const int topBarHeight = gmenu2x->skinConfInt["topBarHeight"];
 	rowHeight = gmenu2x->font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
-	rowHeight = constrain(rowHeight, 20, 40);
-	numRows = (gmenu2x->resY - topBarHeight - 20) / rowHeight;
+	rowHeight = constrain(rowHeight, 40, 80);
+	numRows = (gmenu2x->resY - topBarHeight - 40) / rowHeight;
 	clipRect = (SDL_Rect) {
 		0,
-		static_cast<Sint16>(topBarHeight + 1),
-		static_cast<Uint16>(gmenu2x->resX - 9),
-		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 25)
+		static_cast<Sint16>(topBarHeight + 2),
+		static_cast<Uint16>(gmenu2x->resX - 18),
+		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 35)
 	};
 	touchRect = (SDL_Rect) {
 		2,
-		static_cast<Sint16>(topBarHeight + 4),
-		static_cast<Uint16>(gmenu2x->resX - 12),
+		static_cast<Sint16>(topBarHeight + 8),
+		static_cast<Uint16>(gmenu2x->resX - 24),
 		clipRect.h
 	};
 
@@ -138,27 +138,27 @@ void BrowseDialog::handleInput()
 		break;
 	case BrowseDialog::ACT_UP:
 		if (selected == 0)
-			selected = fl.size() - 1;
+			selected = fl.size() - 2;
 		else
 			selected -= 1;
 		break;
 	case BrowseDialog::ACT_SCROLLUP:
-		if (selected <= numRows - 2)
+		if (selected <= numRows - 4)
 			selected = 0;
 		else
-			selected -= numRows - 2;
+			selected -= numRows - 4;
 		break;
 	case BrowseDialog::ACT_DOWN:
-		if (fl.size() - 1 <= selected)
+		if (fl.size() - 2 <= selected)
 			selected = 0;
 		else
 			selected += 1;
 		break;
 	case BrowseDialog::ACT_SCROLLDOWN:
-		if (selected+(numRows-2)>=fl.size())
-			selected = fl.size()-1;
+		if (selected+(numRows-4)>=fl.size())
+			selected = fl.size()-2;
 		else
-			selected += numRows-2;
+			selected += numRows-4;
 		break;
 	case BrowseDialog::ACT_GOUP:
 		directoryUp();
@@ -186,11 +186,11 @@ void BrowseDialog::directoryUp()
 	string path = getPath();
 	string::size_type p = path.rfind("/");
 
-	if (p == path.size() - 1) {
+	if (p == path.size() - 2) {
 		p = path.rfind("/", p - 1);
 	}
 
-	if (p == string::npos || path.length() < 2 || path[0] != '/') {
+	if (p == string::npos || path.length() < 4 || path[0] != '/') {
 		quit();
 	} else {
 		selected = 0;
@@ -236,7 +236,7 @@ void BrowseDialog::paint()
 	drawTitleIcon(bg, "icons/explorer.png", true);
 	writeTitle(bg, title);
 	writeSubTitle(bg, subtitle);
-	buttonBox.paint(bg, 5, gmenu2x->resY - 1);
+	buttonBox.paint(bg, 10, gmenu2x->resY - 1);
 
 	bg.convertToDisplayFormat();
 	bg.blit(s, 0, 0);
@@ -244,16 +244,16 @@ void BrowseDialog::paint()
 	// TODO(MtH): I have no idea what the right value of firstElement would be,
 	//            but originally it was undefined and that is never a good idea.
 	firstElement = 0;
-	if (selected>firstElement+numRows - 1) {
-		firstElement = selected-numRows + 1;
+	if (selected>firstElement+numRows - 2) {
+		firstElement = selected-numRows + 2;
 	} else if (selected < firstElement) {
 		firstElement = selected;
 	}
 
 	//Selection
 	const int topBarHeight = gmenu2x->skinConfInt["topBarHeight"];
-	iY = topBarHeight + 1 + (selected - firstElement) * rowHeight;
-	s.box(2, iY, gmenu2x->resX - 12, rowHeight - 1,
+	iY = topBarHeight + 2 + (selected - firstElement) * rowHeight;
+	s.box(2, iY, gmenu2x->resX - 24, rowHeight - 2,
 			gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 
 	lastElement = firstElement + numRows;
@@ -275,12 +275,12 @@ void BrowseDialog::paint()
 		} else {
 			icon = iconFile;
 		}
-		icon->blit(s, 5, offsetY);
-		gmenu2x->font->write(s, fl[i], 24, offsetY + rowHeight / 2,
+		icon->blit(s, 10, offsetY);
+		gmenu2x->font->write(s, fl[i], 48, offsetY + rowHeight / 2,
 				Font::HAlignLeft, Font::VAlignMiddle);
 
 		if (ts.available() && ts.pressed()
-				&& ts.inRect(touchRect.x, offsetY + 3, touchRect.w, rowHeight)) {
+				&& ts.inRect(touchRect.x, offsetY + 6, touchRect.w, rowHeight)) {
 			ts_pressed = true;
 			selected = i;
 		}

@@ -46,8 +46,8 @@ Touchscreen::~Touchscreen() {
 
 void Touchscreen::calibrate() {
 	if (event.pressure == 0) {
-		calibX = ((event.x - 200) * 320 / 3750) / 4;
-		calibY = (((event.y - 200) * 240 / 3750)) / 4;
+		calibX = ((event.x - 200) * 640 / 3750) / 4;
+		calibY = (((event.y - 200) * 480 / 3750)) / 4;
 		calibrated = true;
 	}
 }

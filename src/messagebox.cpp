@@ -26,9 +26,9 @@
 
 using namespace std;
 
-constexpr unsigned int ICON_PADDING = 6;
-constexpr unsigned int TEXT_PADDING = 8;
-constexpr unsigned int ICON_DIMENSION = 32;
+constexpr unsigned int ICON_PADDING = 12;
+constexpr unsigned int TEXT_PADDING = 16;
+constexpr unsigned int ICON_DIMENSION = 64;
 
 MessageBox::MessageBox(GMenu2X *gmenu2x, const string &text, const string &icon) {
 	this->gmenu2x = gmenu2x;
@@ -65,21 +65,21 @@ int MessageBox::exec() {
 	OutputSurface& s = *gmenu2x->s;
 	OffscreenSurface bg(s);
 	//Darken background
-	bg.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,200);
+	bg.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,400);
 
 	SDL_Rect box;
 	int textHeight = gmenu2x->font->getTextHeight(text);
-	box.h = textHeight + 2 * TEXT_PADDING;
-	box.w = gmenu2x->font->getTextWidth(text) + 2 * TEXT_PADDING;
+	box.h = textHeight + 4 * TEXT_PADDING;
+	box.w = gmenu2x->font->getTextWidth(text) + 4 * TEXT_PADDING;
 	if (gmenu2x->sc[icon]) {
-		box.h = max(box.h, (Uint16) (ICON_DIMENSION + 2 * ICON_PADDING));
+		box.h = max(box.h, (Uint16) (ICON_DIMENSION + 4 * ICON_PADDING));
 		box.w += ICON_DIMENSION + ICON_PADDING;
 	}
 	box.x = gmenu2x->halfX - box.w/2;
 	box.y = gmenu2x->halfY - box.h/2;
 
 	//outer box
-	bg.box(box.x - 2, box.y - 2, box.w + 4, box.h + 4, gmenu2x->skinConfColors[COLOR_MESSAGE_BOX_BG]);
+	bg.box(box.x - 4, box.y - 4, box.w + 8, box.h + 8, gmenu2x->skinConfColors[COLOR_MESSAGE_BOX_BG]);
 	//draw inner rectangle
 	bg.rectangle(box, gmenu2x->skinConfColors[COLOR_MESSAGE_BOX_BORDER]);
 	//icon+text
@@ -88,16 +88,16 @@ int MessageBox::exec() {
 	}
 	gmenu2x->font->write(bg, text, box.x + TEXT_PADDING + (gmenu2x->sc[icon] ? ICON_PADDING + ICON_DIMENSION : 0), box.y + (box.h - textHeight) / 2, Font::HAlignLeft, Font::VAlignTop);
 
-	int btnX = gmenu2x->halfX+box.w/2-6;
+	int btnX = gmenu2x->halfX+box.w/2-12;
 	for (uint i = 0; i < BUTTON_TYPE_SIZE; i++) {
 		if (!buttons[i].empty()) {
-			buttonPositions[i].y = box.y+box.h+8;
+			buttonPositions[i].y = box.y+box.h+16;
 			buttonPositions[i].w = btnX;
 
 			btnX = gmenu2x->drawButtonRight(bg, buttonLabels[i], buttons[i], btnX, buttonPositions[i].y);
 
 			buttonPositions[i].x = btnX;
-			buttonPositions[i].w = buttonPositions[i].x-btnX-6;
+			buttonPositions[i].w = buttonPositions[i].x-btnX-8;
 		}
 	}
 

@@ -39,7 +39,7 @@ case "$GMENU2X_PLATFORM" in
 	gcw0)
 		AC_DEFINE(PLATFORM_GCW0)
 		PLATFORM="gcw0"
-		SCREEN_RES="320x240"
+		SCREEN_RES="640x480"
 		CPUFREQ=yes
 	;;
 	nanonote)

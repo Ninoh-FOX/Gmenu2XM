@@ -63,7 +63,7 @@ int Selector::exec(int startSelection) {
 	writeTitle(bg, link.getTitle());
 	writeSubTitle(bg, link.getDescription());
 
-	int x = 5;
+	int x = 10;
 	if (fl.size() != 0) {
 		x = gmenu2x->drawButton(bg, "accept", gmenu2x->tr["Select"], x);
 	}
@@ -83,7 +83,7 @@ int Selector::exec(int startSelection) {
 	// Figure out how many items we can fit in the content area.
 	int lineHeight = gmenu2x->font->getLineSpacing();
 	if (showDirectories && folderIcon) {
-		lineHeight = max(lineHeight, folderIcon->height() + 2);
+		lineHeight = max(lineHeight, folderIcon->height() + 4);
 	}
 	unsigned int nb_elements = max(height / lineHeight, 1u);
 	// Redistribute any leftover space.
@@ -103,7 +103,7 @@ int Selector::exec(int startSelection) {
 
 		if (fl.size() == 0) {
 			gmenu2x->font->write(s, "(" + gmenu2x->tr["no items"] + ")",
-					4, top + lineHeight / 2,
+					8, top + lineHeight / 2,
 					Font::HAlignLeft, Font::VAlignMiddle);
 		} else {
 			if (selected >= firstElement + nb_elements)
@@ -118,13 +118,13 @@ int Selector::exec(int startSelection) {
 				if (screenshot) {
 					if(gmenu2x->confInt["previewType"]==1) {
             unsigned int opac=gmenu2x->confInt["opacity"];
-            screenshot->blitRight(s, 320, 0, 320, 240, opac);   // background preview
+            screenshot->blitRight(s, 640, 0, 640, 480, opac);   // background preview
           } else {
             unsigned int opac=gmenu2x->confInt["opacity"];
             #define PREVIEW_RATIO   0.45      // preview scale, 1=240 height
-            int h=240*PREVIEW_RATIO;
+            int h=480*PREVIEW_RATIO;
             int w=h * screenshot->width() / screenshot->height();
-            screenshot->blitScaled(s, 315-w, 0, w, h, opac);          // thumbnail preview
+            screenshot->blitScaled(s, 630-w, 0, w, h, opac);          // thumbnail preview
 					}
 				}
 			}
@@ -132,10 +132,10 @@ int Selector::exec(int startSelection) {
 			//Selection
 			int iY = top + (selected - firstElement) * lineHeight;
 			if (selected<fl.size())
-				s.box(1, iY, 309, lineHeight, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+				s.box(1, iY, 618, lineHeight, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 
 			//Files & Dirs
-			s.setClipRect(0, top, 311, height);
+			s.setClipRect(0, top, 622, height);
 			for (unsigned int i = firstElement;
 					i < fl.size() && i < firstElement + nb_elements; i++) {
 				iY = top + (i - firstElement) * lineHeight;
@@ -144,7 +144,7 @@ int Selector::exec(int startSelection) {
 					if (folderIcon) {
 						folderIcon->blit(s,
 								x, iY + (lineHeight - folderIcon->height()) / 2);
-						x += folderIcon->width() + 2;
+						x += folderIcon->width() + 4;
 					}
 					gmenu2x->font->write(s, fl[i],
 							x, iY + lineHeight / 2,

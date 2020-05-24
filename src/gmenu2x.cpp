@@ -228,8 +228,8 @@ GMenu2X::GMenu2X()
 
 	halfX = resX/2;
 	halfY = resY/2;
-	bottomBarIconY = resY-18;
-	bottomBarTextY = resY-10;
+	bottomBarIconY = resY-36;
+	bottomBarTextY = resY-20;
 
 	/* Do not clear the screen on exit.
 	 * This may require an SDL patch available at
@@ -334,7 +334,7 @@ void GMenu2X::initBG() {
 	manualX = cpuX;
 #endif
 
-	int serviceX = resX-38;
+	int serviceX = resX-76;
 	if (usbnet) {
 		if (web) {
 			auto webserver = OffscreenSurface::loadImage(
@@ -364,7 +364,7 @@ void GMenu2X::initFont() {
 	if (!path.empty()) {
 		unsigned int size = skinConfInt["fontsize"];
 		if (!size)
-			size = 12;
+			size = 24;
 		if (path.substr(0,5)=="skin:")
 			path = sc.getSkinFilePath(path.substr(5, path.length()));
 		font.reset(new Font(path, size));
@@ -492,7 +492,7 @@ void GMenu2X::readConfig(string conffile) {
 	if (confStr["skin"].empty() || SurfaceCollection::getSkinPath(confStr["skin"]).empty())
 		confStr["skin"] = "Default";
 
-	evalIntConf( confInt, "outputLogs", 0, 0,1 );
+	evalIntConf( confInt, "outputLogs", 1, 0,1 );
 #ifdef ENABLE_CPUFREQ
 	evalIntConf( confInt, "maxClock",
 				 cpuFreqSafeMax, cpuFreqMin, cpuFreqMax );
@@ -502,12 +502,12 @@ void GMenu2X::readConfig(string conffile) {
 	evalIntConf( confInt, "backlightTimeout", 15, 0,120 );
 	evalIntConf( confInt, "buttonRepeatRate", 10, 0, 20 );
 	evalIntConf( confInt, "videoBpp", 32, 16, 32 );
-	evalIntConf( confInt, "previewType", 1, 1, 2);
-	evalIntConf( confInt, "opacity", 128, 0, 255);
+	evalIntConf( confInt, "previewType", 2, 1, 2);
+	evalIntConf( confInt, "opacity", 90, 0, 255);
 
 	if (confStr["tvoutEncoding"] != "PAL") confStr["tvoutEncoding"] = "NTSC";
-	resX = constrain( confInt["resolutionX"], 320,1920 );
-	resY = constrain( confInt["resolutionY"], 240,1200 );
+	resX = constrain( confInt["resolutionX"], 640,1920 );
+	resY = constrain( confInt["resolutionY"], 480,1200 );
 }
 
 void GMenu2X::saveSelection() {
@@ -858,10 +858,10 @@ void GMenu2X::setSkin(const string &skin, bool setWallpaper) {
 			WARNING("Unable to find wallpaper defined on skin %s\n", skin.c_str());
 	}
 
-	evalIntConf(skinConfInt, "topBarHeight", 50, 32, 120);
-	evalIntConf(skinConfInt, "bottomBarHeight", 20, 20, 120);
-	evalIntConf(skinConfInt, "linkHeight", 50, 32, 120);
-	evalIntConf(skinConfInt, "linkWidth", 80, 32, 120);
+	evalIntConf(skinConfInt, "topBarHeight", 100, 64, 240);
+	evalIntConf(skinConfInt, "bottomBarHeight", 40, 40, 240);
+	evalIntConf(skinConfInt, "linkHeight", 100, 64, 240);
+	evalIntConf(skinConfInt, "linkWidth", 160, 64, 240);
 
 	if (menu != NULL) menu->skinUpdated();
 
@@ -1135,12 +1135,12 @@ int GMenu2X::drawButton(Surface& s, const string &btn, const string &text, int x
 	if (icon) {
 		if (y < 0) y = resY + y;
 		w = icon->width();
-		icon->blit(s, x, y - 7);
+		icon->blit(s, x, y - 14);
 		if (!text.empty()) {
-			w += 3;
+			w += 6;
 			w += font->write(
 					s, text, x + w, y, Font::HAlignLeft, Font::VAlignMiddle);
-			w += 6;
+			w += 12;
 		}
 	}
 	return x + w;
@@ -1152,12 +1152,12 @@ int GMenu2X::drawButtonRight(Surface& s, const string &btn, const string &text, 
 	if (icon) {
 		if (y < 0) y = resY + y;
 		w = icon->width();
-		icon->blit(s, x - w, y - 7);
+		icon->blit(s, x - w, y - 14);
 		if (!text.empty()) {
-			w += 3;
+			w += 6;
 			w += font->write(
 					s, text, x - w, y, Font::HAlignRight, Font::VAlignMiddle);
-			w += 6;
+			w += 12;
 		}
 	}
 	return x - w;
@@ -1171,17 +1171,17 @@ void GMenu2X::drawScrollBar(uint pageSize, uint totalSize, uint pagePos) {
 
 	unsigned int top, height;
 	tie(top, height) = getContentArea();
-	top += 1;
-	height -= 2;
-
-	s->rectangle(resX - 8, top, 7, height, skinConfColors[COLOR_SELECTION_BG]);
 	top += 2;
 	height -= 4;
+
+	s->rectangle(resX - 16, top, 14, height, skinConfColors[COLOR_SELECTION_BG]);
+	top += 4;
+	height -= 8;
 
 	const uint barSize = max(height * pageSize / totalSize, 4u);
 	const uint barPos = (height - barSize) * pagePos / (totalSize - pageSize);
 
-	s->box(resX - 6, top + barPos, 3, barSize,
+	s->box(resX - 12, top + barPos, 6, barSize,
 			skinConfColors[COLOR_SELECTION_BG]);
 }
 

@@ -52,18 +52,18 @@ bool SettingsDialog::exec() {
 	const int topBarHeight = gmenu2x->skinConfInt["topBarHeight"];
 	SDL_Rect clipRect = {
 		0,
-		static_cast<Sint16>(topBarHeight + 1),
-		static_cast<Uint16>(gmenu2x->resX - 9),
-		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 25)
+		static_cast<Sint16>(topBarHeight + 2),
+		static_cast<Uint16>(gmenu2x->resX - 18),
+		static_cast<Uint16>(gmenu2x->resY - topBarHeight - 50)
 	};
 	SDL_Rect touchRect = {
 		2,
-		static_cast<Sint16>(topBarHeight + 4),
-		static_cast<Uint16>(gmenu2x->resX - 12),
+		static_cast<Sint16>(topBarHeight + 8),
+		static_cast<Uint16>(gmenu2x->resX - 24),
 		static_cast<Uint16>(clipRect.h)
 	};
 	uint rowHeight = gmenu2x->font->getLineSpacing() + 1; // gp2x=15+1 / pandora=19+1
-	uint numRows = (gmenu2x->resY - topBarHeight - 20) / rowHeight;
+	uint numRows = (gmenu2x->resY - topBarHeight - 40) / rowHeight;
 
 	uint maxNameWidth = 0;
 	for (auto it = settings.begin(); it != settings.end(); it++) {
@@ -88,10 +88,10 @@ bool SettingsDialog::exec() {
 		if (sel<firstElement) firstElement=sel;
 
 		//selection
-		uint iY = topBarHeight + 2 + (sel - firstElement) * rowHeight;
+		uint iY = topBarHeight + 4 + (sel - firstElement) * rowHeight;
 
 		//selected option
-		settings[sel]->drawSelected(maxNameWidth + 15, iY, rowHeight);
+		settings[sel]->drawSelected(maxNameWidth + 30, iY, rowHeight);
 
 		if (ts_pressed && !ts.pressed()) {
 			ts_pressed = false;
@@ -101,7 +101,7 @@ bool SettingsDialog::exec() {
 		}
 		for (i=firstElement; i<settings.size() && i<firstElement+numRows; i++) {
 			iY = i-firstElement;
-			settings[i]->draw(maxNameWidth + 15, iY * rowHeight + topBarHeight + 2, rowHeight);
+			settings[i]->draw(maxNameWidth + 30, iY * rowHeight + topBarHeight + 4, rowHeight);
 			if (ts.available() && ts.pressed() && ts.inRect(
 					touchRect.x, touchRect.y + (iY * rowHeight),
 					touchRect.w, rowHeight
@@ -117,7 +117,7 @@ bool SettingsDialog::exec() {
 		writeSubTitle(s, settings[sel]->getDescription());
 
 		s.flip();
-		settings[sel]->handleTS(maxNameWidth + 15, iY, rowHeight);
+		settings[sel]->handleTS(maxNameWidth + 30, iY, rowHeight);
 
 		InputManager::Button button = inputMgr.waitForPressedButton();
 		if (!settings[sel]->handleButtonPress(button)) {

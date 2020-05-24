@@ -28,9 +28,9 @@
 
 using namespace std;
 
-#define KEY_WIDTH 20
-#define KEY_HEIGHT 20
-#define KB_TOP 90
+#define KEY_WIDTH 40
+#define KEY_HEIGHT 40
+#define KB_TOP 180
 
 static bool utf8Code(unsigned char c)
 {
@@ -129,19 +129,19 @@ void InputDialog::setKeyboard(int kb) {
 		}
 	}
 
-	kbLeft = 160 - kbLength * KEY_WIDTH / 2;
-	kbWidth = kbLength * KEY_WIDTH + 3;
-	kbHeight = (this->kb->size() + 1) * KEY_HEIGHT + 3;
+	kbLeft = 320 - kbLength * KEY_WIDTH / 2;
+	kbWidth = kbLength * KEY_WIDTH + 6;
+	kbHeight = (this->kb->size() + 1) * KEY_HEIGHT + 6;
 
-	kbRect.x = kbLeft - 3;
-	kbRect.y = KB_TOP - 2;
+	kbRect.x = kbLeft - 6;
+	kbRect.y = KB_TOP - 4;
 	kbRect.w = kbWidth;
 	kbRect.h = kbHeight;
 }
 
 bool InputDialog::exec() {
 	SDL_Rect box = {
-		0, 60, 0, static_cast<Uint16>(gmenu2x->font->getLineSpacing() + 4)
+		0, 120, 0, static_cast<Uint16>(gmenu2x->font->getLineSpacing() + 8)
 	};
 
 	Uint32 caretTick = 0, curTick;
@@ -151,7 +151,7 @@ bool InputDialog::exec() {
 	drawTitleIcon(bg, icon, false);
 	writeTitle(bg, title);
 	writeSubTitle(bg, text);
-	buttonbox.paint(bg, 5, gmenu2x->resY - 1);
+	buttonbox.paint(bg, 10, gmenu2x->resY - 2);
 	bg.convertToDisplayFormat();
 
 	close = false;
@@ -161,14 +161,14 @@ bool InputDialog::exec() {
 
 		bg.blit(s, 0, 0);
 
-		box.w = gmenu2x->font->getTextWidth(input) + 18;
-		box.x = 160 - box.w / 2;
+		box.w = gmenu2x->font->getTextWidth(input) + 36;
+		box.x = 320 - box.w / 2;
 		s.box(box.x, box.y, box.w, box.h,
 		gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 		s.rectangle(box.x, box.y, box.w, box.h,
 				gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 
-		gmenu2x->font->write(s, input, box.x + 5, box.y + box.h - 2,
+		gmenu2x->font->write(s, input, box.x + 5, box.y + box.h - 4,
 				Font::HAlignLeft, Font::VAlignBottom);
 
 		curTick = SDL_GetTicks();
@@ -178,7 +178,7 @@ bool InputDialog::exec() {
 		}
 
 		if (caretOn) {
-			s.box(box.x + box.w - 12, box.y + 3, 8, box.h - 6,
+			s.box(box.x + box.w - 24, box.y + 6, 16, box.h - 12,
 					gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 		}
 
@@ -276,15 +276,15 @@ void InputDialog::drawVirtualKeyboard() {
 
 	//selection
 	if (selRow<(int)kb->size())
-		s.box(kbLeft + selCol * KEY_WIDTH - 1,
-				KB_TOP + selRow * KEY_HEIGHT, KEY_WIDTH - 1, KEY_HEIGHT - 2,
+		s.box(kbLeft + selCol * KEY_WIDTH - 2,
+				KB_TOP + selRow * KEY_HEIGHT, KEY_WIDTH - 2, KEY_HEIGHT - 4,
 				gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 	else {
 		if (selCol > 1) selCol = 0;
 		if (selCol < 0) selCol = 1;
 		s.box(kbLeft + selCol * kbLength * KEY_WIDTH / 2 - 1,
-				KB_TOP + kb->size() * KEY_HEIGHT, kbLength * KEY_WIDTH / 2 - 1,
-				KEY_HEIGHT - 1, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
+				KB_TOP + kb->size() * KEY_HEIGHT, kbLength * KEY_WIDTH / 2 - 2,
+				KEY_HEIGHT - 2, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 	}
 
 	//keys
@@ -315,7 +315,7 @@ void InputDialog::drawVirtualKeyboard() {
 			s.rectangle(re,
 					gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 			gmenu2x->font->write(s, charX,
-					kbLeft + xc * KEY_WIDTH + KEY_WIDTH / 2 - 1,
+					kbLeft + xc * KEY_WIDTH + KEY_WIDTH / 2 - 2,
 					KB_TOP + l * KEY_HEIGHT + KEY_HEIGHT / 2,
 					Font::HAlignCenter, Font::VAlignMiddle);
 			xc++;
@@ -326,7 +326,7 @@ void InputDialog::drawVirtualKeyboard() {
 	SDL_Rect re = {
 		static_cast<Sint16>(kbLeft - 1),
 		static_cast<Sint16>(KB_TOP + kb->size() * KEY_HEIGHT),
-		static_cast<Uint16>(kbLength * KEY_WIDTH / 2 - 1),
+		static_cast<Uint16>(kbLength * KEY_WIDTH / 2 - 2),
 		KEY_HEIGHT - 1
 	};
 	s.rectangle(re, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
@@ -335,18 +335,18 @@ void InputDialog::drawVirtualKeyboard() {
 		selRow = kb->size();
 	}
 	gmenu2x->font->write(s, gmenu2x->tr["Cancel"],
-			(int)(160 - kbLength * KEY_WIDTH / 4),
+			(int)(320 - kbLength * KEY_WIDTH / 4),
 			KB_TOP + kb->size() * KEY_HEIGHT + KEY_HEIGHT / 2,
 			Font::HAlignCenter, Font::VAlignMiddle);
 
-	re.x = kbLeft + kbLength * KEY_WIDTH / 2 - 1;
+	re.x = kbLeft + kbLength * KEY_WIDTH / 2 - 2;
 	s.rectangle(re, gmenu2x->skinConfColors[COLOR_SELECTION_BG]);
 	if (ts.available() && ts.pressed() && ts.inRect(re)) {
 		selCol = 1;
 		selRow = kb->size();
 	}
 	gmenu2x->font->write(s, gmenu2x->tr["OK"],
-			(int)(160 + kbLength * KEY_WIDTH / 4),
+			(int)(320 + kbLength * KEY_WIDTH / 4),
 			KB_TOP + kb->size() * KEY_HEIGHT + KEY_HEIGHT / 2,
 			Font::HAlignCenter, Font::VAlignMiddle);
 }
