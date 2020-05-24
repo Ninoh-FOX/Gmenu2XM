@@ -65,7 +65,7 @@ int MessageBox::exec() {
 	OutputSurface& s = *gmenu2x->s;
 	OffscreenSurface bg(s);
 	//Darken background
-	bg.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,400);
+	bg.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,200);
 
 	SDL_Rect box;
 	int textHeight = gmenu2x->font->getTextHeight(text);
