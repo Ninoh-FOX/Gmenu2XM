@@ -425,7 +425,7 @@ bool LinkApp::save() {
 
 void LinkApp::drawLaunch(Surface& s) {
 	//Darkened background
-	s.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,300);
+	s.box(0, 0, gmenu2x->resX, gmenu2x->resY, 0,0,0,150);
 
 	string text = getLaunchMsg().empty()
 		? gmenu2x->tr.translate("Launching $1", getTitle().c_str(), nullptr)
