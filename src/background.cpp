@@ -19,14 +19,14 @@ void Background::paint(Surface& s) {
 	bgmain.blit(s, 0, 0);
 
 	font.write(s, clock.getTime(),
-			s.width() - 70, gmenu2x.bottomBarTextY,
+			s.width() - 140, gmenu2x.bottomBarTextY,
 			Font::HAlignCenter, Font::VAlignMiddle);
 
-	battery.getIcon()->blit(s, s.width() - 19, gmenu2x.bottomBarIconY);
+	battery.getIcon()->blit(s, s.width() - 38, gmenu2x.bottomBarIconY);
 		
 	// rafavico, fix por Ninoh-fox -->
 	font.write(s, battery.getLevel(),
-			s.width() - 34, gmenu2x.bottomBarTextY,
+			s.width() - 68, gmenu2x.bottomBarTextY,
 			Font::HAlignCenter, Font::VAlignMiddle);
     // <-- rafavico
 
